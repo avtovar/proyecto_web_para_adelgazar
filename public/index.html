@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metodo para Adelgazar</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <main id="authScreen" class="auth-shell">
+      <section class="auth-copy" aria-label="Presentacion">
+        <p class="eyebrow">Seguimiento personal</p>
+        <h1>Metodo para Adelgazar</h1>
+        <p>Registra tu peso, acumula minutos de entrenamiento y recibe ejercicios adaptados a tu rango actual.</p>
+        <div class="auth-highlights">
+          <span>Rutinas por peso</span>
+          <span>Progreso semanal</span>
+          <span>Sesiones acumuladas</span>
+        </div>
+      </section>
+
+      <section class="auth-card" aria-label="Acceso">
+        <div class="auth-tabs" role="tablist">
+          <button id="loginTab" class="active" type="button">Iniciar sesion</button>
+          <button id="registerTab" type="button">Registrarse</button>
+        </div>
+
+        <form id="loginForm" class="form-panel">
+          <label for="loginEmail">Correo electronico</label>
+          <input type="email" id="loginEmail" autocomplete="email" required>
+          <label for="loginPassword">Contrasena</label>
+          <input type="password" id="loginPassword" autocomplete="current-password" required>
+          <button type="submit">Entrar</button>
+          <div class="message error" id="loginError" aria-live="polite"></div>
+        </form>
+
+        <form id="registerForm" class="form-panel" hidden>
+          <label for="regNombre">Nombre completo</label>
+          <input type="text" id="regNombre" autocomplete="name" required>
+          <label for="regEmail">Correo electronico</label>
+          <input type="email" id="regEmail" autocomplete="email" required>
+          <label for="regPassword">Contrasena</label>
+          <input type="password" id="regPassword" minlength="6" autocomplete="new-password" required>
+          <label for="regFechaNac">Fecha de nacimiento</label>
+          <input type="date" id="regFechaNac" required>
+          <label for="regPeso">Peso actual en kg</label>
+          <input type="number" id="regPeso" min="40" max="250" step="0.1" required>
+          <label for="regSexo">Sexo</label>
+          <select id="regSexo" required>
+            <option value="M">Hombre</option>
+            <option value="F">Mujer</option>
+          </select>
+          <button type="submit">Crear cuenta</button>
+          <div class="message error" id="registerError" aria-live="polite"></div>
+        </form>
+      </section>
+    </main>
+
+    <main id="mainPanel" class="dashboard" hidden>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Panel personal</p>
+          <h2>Hola, <span id="userName"></span></h2>
+        </div>
+        <button id="logoutBtn" class="secondary-button" type="button">Cerrar sesion</button>
+      </header>
+
+      <section class="summary-grid" aria-label="Resumen">
+        <article>
+          <span>Peso actual</span>
+          <strong id="pesoActual">-</strong>
+        </article>
+        <article>
+          <span>Rango recomendado</span>
+          <strong id="rangoMostrado">-</strong>
+        </article>
+        <article>
+          <span>Minutos acumulados</span>
+          <strong><span id="totalMinutos">0</span> min</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Rutina sugerida</p>
+            <h3>Ejercicios recomendados</h3>
+          </div>
+          <div class="segmented-control" role="group" aria-label="Tipo de ejercicio">
+            <button id="btnConPesas" class="active" type="button">Con pesas</button>
+            <button id="btnSinPesas" type="button">Sin pesas</button>
+          </div>
+        </div>
+        <div id="listaEjercicios" class="exercise-grid"></div>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel">
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">Peso</p>
+              <h3>Registro semanal</h3>
+            </div>
+          </div>
+          <div class="inline-form">
+            <label for="fechaPeso">Fecha</label>
+            <input type="date" id="fechaPeso">
+            <label for="pesoKg">Peso en kg</label>
+            <input type="number" id="pesoKg" min="40" max="250" step="0.1">
+            <button id="guardarPeso" type="button">Guardar peso</button>
+          </div>
+          <div id="pesoMessage" class="message" aria-live="polite"></div>
+          <div id="graficoPeso" class="chart" aria-label="Grafico de peso"></div>
+        </article>
+
+        <article class="panel">
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">Actividad</p>
+              <h3>Sesion de hoy</h3>
+            </div>
+          </div>
+          <div class="inline-form">
+            <label for="minutosEjercicio">Minutos</label>
+            <input type="number" id="minutosEjercicio" min="1" max="300">
+            <label for="tipoEjercicio">Tipo</label>
+            <input type="text" id="tipoEjercicio" placeholder="Cardio, pesas, movilidad">
+            <button id="guardarTiempo" type="button">Guardar sesion</button>
+          </div>
+          <div id="tiempoMessage" class="message" aria-live="polite"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

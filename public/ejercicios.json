@@ -1,0 +1,260 @@
+{
+  "40-79": {
+    "etiqueta": "40 a 79 kg",
+    "conPesas": [
+      {
+        "nombre": "Sentadilla goblet",
+        "explicacion": "Sujeta una mancuerna al pecho, baja controlado y sube empujando el piso. Mantén la espalda larga.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Remo con mancuernas",
+        "explicacion": "Inclina el torso con espalda neutra y lleva las mancuernas hacia las costillas. Baja lento.",
+        "series": "3 series de 12 repeticiones",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Peso muerto rumano liviano",
+        "explicacion": "Con rodillas apenas flexionadas, lleva la cadera hacia atrás y sube apretando glúteos.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 8
+      }
+    ],
+    "sinPesas": [
+      {
+        "nombre": "Caminata rápida",
+        "explicacion": "Camina a ritmo sostenido, pudiendo hablar pero no cantar. Suma movilidad de brazos.",
+        "series": "20 a 30 minutos",
+        "duracion_sugerida": 25
+      },
+      {
+        "nombre": "Zancada asistida",
+        "explicacion": "Sujétate de una pared o silla, da un paso atrás y baja poco. Alterna piernas.",
+        "series": "3 series de 8 por pierna",
+        "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Plancha inclinada",
+        "explicacion": "Apoya manos sobre una mesa firme y mantén abdomen activo sin hundir la cintura.",
+        "series": "4 repeticiones de 20 segundos",
+        "duracion_sugerida": 6
+      }
+    ]
+  },
+  "80-99": {
+    "etiqueta": "80 a 99 kg",
+    "conPesas": [
+      {
+        "nombre": "Press de hombros sentado",
+        "explicacion": "Sentado, lleva las mancuernas desde los hombros hacia arriba sin arquear la espalda.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Sentadilla a silla con mancuerna",
+        "explicacion": "Toca la silla con la cadera y sube. Usa una mancuerna liviana al pecho si te resulta cómodo.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Curl de bíceps alternado",
+        "explicacion": "Sube una mancuerna por vez, codos cerca del cuerpo y muñecas firmes.",
+        "series": "3 series de 12 repeticiones",
+        "duracion_sugerida": 7
+      }
+    ],
+    "sinPesas": [
+      {
+        "nombre": "Marcha estacionaria",
+        "explicacion": "Eleva rodillas de forma cómoda y acompaña con brazos. Descansa si pierdes técnica.",
+        "series": "6 rondas de 1 minuto",
+        "duracion_sugerida": 12
+      },
+      {
+        "nombre": "Puente de glúteos",
+        "explicacion": "Acostado boca arriba, pies apoyados, eleva la cadera y baja controlado.",
+        "series": "3 series de 12 repeticiones",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Step bajo",
+        "explicacion": "Sube y baja de un escalón bajo, alternando pierna líder y usando apoyo si hace falta.",
+        "series": "5 rondas de 45 segundos",
+        "duracion_sugerida": 10
+      }
+    ]
+  },
+  "100-120": {
+    "etiqueta": "100 a 120 kg",
+    "conPesas": [
+      {
+        "nombre": "Sentadilla con mancuernas",
+        "explicacion": "Sujeta una mancuerna en cada mano. Baja como si fueras a sentarte, con espalda recta.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Press de pecho en el piso",
+        "explicacion": "Acostado boca arriba, empuja las mancuernas hacia arriba y baja hasta tocar suave el suelo con los brazos.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Remo sentado con banda o mancuerna",
+        "explicacion": "Trabaja la espalda llevando los codos hacia atrás, sin encoger hombros.",
+        "series": "3 series de 12 repeticiones",
+        "duracion_sugerida": 8
+      }
+    ],
+    "sinPesas": [
+      {
+        "nombre": "Caminata por intervalos",
+        "explicacion": "Alterna 2 minutos cómodos con 1 minuto algo más rápido. Mantén una pisada estable.",
+        "series": "18 a 24 minutos",
+        "duracion_sugerida": 20
+      },
+      {
+        "nombre": "Sentarse y levantarse",
+        "explicacion": "Usa una silla firme. Levántate sin impulsarte si puedes, baja lento y con control.",
+        "series": "3 series de 8 repeticiones",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Plancha en pared",
+        "explicacion": "Apoya antebrazos en la pared y conserva una línea recta de cabeza a talones.",
+        "series": "4 repeticiones de 25 segundos",
+        "duracion_sugerida": 6
+      }
+    ]
+  },
+  "121-140": {
+    "etiqueta": "121 a 140 kg",
+    "conPesas": [
+      {
+        "nombre": "Press de hombros sentado liviano",
+        "explicacion": "Usa poco peso y silla con respaldo. Sube las mancuernas sin bloquear los codos.",
+        "series": "3 series de 8 repeticiones",
+        "duracion_sugerida": 7
+      },
+      {
+        "nombre": "Remo apoyado",
+        "explicacion": "Apoya una mano en una mesa firme y rema con la otra. Cambia de lado.",
+        "series": "3 series de 10 por lado",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Elevaciones laterales cortas",
+        "explicacion": "Levanta mancuernas livianas hasta media altura, lento y sin balancear el torso.",
+        "series": "2 series de 10 repeticiones",
+        "duracion_sugerida": 6
+      }
+    ],
+    "sinPesas": [
+      {
+        "nombre": "Caminata suave progresiva",
+        "explicacion": "Empieza con ritmo cómodo. Cada semana suma 2 a 3 minutos si recuperas bien.",
+        "series": "12 a 20 minutos",
+        "duracion_sugerida": 15
+      },
+      {
+        "nombre": "Movilidad de cadera y hombros",
+        "explicacion": "Haz círculos suaves de hombros, apertura de pecho y balanceos controlados de pierna.",
+        "series": "8 a 10 minutos",
+        "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Sentadilla parcial a silla",
+        "explicacion": "Baja solo hasta donde puedas controlar, usando una silla firme como referencia.",
+        "series": "3 series de 6 repeticiones",
+        "duracion_sugerida": 7
+      }
+    ]
+  },
+  "141-150": {
+    "etiqueta": "141 a 150 kg",
+    "conPesas": [
+      {
+        "nombre": "Curl de bíceps sentado",
+        "explicacion": "Sentado y con mancuernas livianas, sube y baja controlado para sumar trabajo sin impacto.",
+        "series": "2 series de 10 repeticiones",
+        "duracion_sugerida": 6
+      },
+      {
+        "nombre": "Press de pecho sentado con banda",
+        "explicacion": "Con banda elástica detrás de la espalda, empuja al frente y vuelve lento.",
+        "series": "2 series de 10 repeticiones",
+        "duracion_sugerida": 7
+      },
+      {
+        "nombre": "Remo con banda sentado",
+        "explicacion": "Ancla una banda de forma segura y lleva codos atrás, manteniendo el pecho abierto.",
+        "series": "3 series de 8 repeticiones",
+        "duracion_sugerida": 7
+      }
+    ],
+    "sinPesas": [
+      {
+        "nombre": "Marcha sentada",
+        "explicacion": "Sentado en una silla firme, eleva un pie por vez y acompaña con brazos.",
+        "series": "6 rondas de 45 segundos",
+        "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Caminata de bajo impacto",
+        "explicacion": "Camina en superficie plana, con calzado estable y pausas programadas.",
+        "series": "8 a 15 minutos",
+        "duracion_sugerida": 12
+      },
+      {
+        "nombre": "Extensión de rodilla sentado",
+        "explicacion": "Extiende una pierna hasta donde sea cómodo, aprieta el muslo y baja lento.",
+        "series": "3 series de 8 por pierna",
+        "duracion_sugerida": 7
+      }
+    ]
+  },
+  "151-250": {
+    "etiqueta": "151 kg o más",
+    "conPesas": [
+      {
+        "nombre": "Trabajo de brazos sentado",
+        "explicacion": "Con mancuernas muy livianas, alterna curl de bíceps y press corto al frente.",
+        "series": "2 rondas de 8 repeticiones por movimiento",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Remo sentado con banda suave",
+        "explicacion": "Tira de una banda elástica suave manteniendo hombros bajos y respiración estable.",
+        "series": "2 series de 8 repeticiones",
+        "duracion_sugerida": 6
+      },
+      {
+        "nombre": "Aperturas de pecho con banda",
+        "explicacion": "Abre los brazos con rango corto y vuelve lento, sin dolor en hombros.",
+        "series": "2 series de 8 repeticiones",
+        "duracion_sugerida": 6
+      }
+    ],
+    "sinPesas": [
+      {
+        "nombre": "Movilidad sentada completa",
+        "explicacion": "Combina círculos de tobillo, elevación alternada de rodillas y apertura de brazos.",
+        "series": "10 minutos",
+        "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Caminata fraccionada",
+        "explicacion": "Realiza bloques cortos de caminata en superficie plana, descansando antes de fatigarte.",
+        "series": "5 bloques de 2 minutos",
+        "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Respiración y activación de abdomen",
+        "explicacion": "Sentado, exhala lento y activa el abdomen como si cerraras un cierre. Relaja y repite.",
+        "series": "3 rondas de 8 respiraciones",
+        "duracion_sugerida": 6
+      }
+    ]
+  }
+}

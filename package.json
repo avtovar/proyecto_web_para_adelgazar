@@ -1,0 +1,9 @@
+{
+  "name": "ejercicios-adelgazar",
+  "version": "1.0.0",
+  "description": "Web de ejercicios para adelgazar por rango de peso",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
