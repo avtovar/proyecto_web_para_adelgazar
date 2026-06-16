@@ -11,7 +11,6 @@ const app = express();
 
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const IS_VERCEL = process.env.VERCEL === '1';
 
 const COOKIE_OPTS = {
   httpOnly: true,
@@ -194,10 +193,6 @@ app.use((err, req, res, next) => {
   console.error('Error:', err);
   const status = err.code === 'DUPLICATE_EMAIL' ? 400 : 500;
   res.status(status).json({ error: err.message || 'Error interno del servidor' });
-});
-
-db.init().catch((err) => {
-  if (!IS_VERCEL) console.error('Error inicializando DB:', err.message);
 });
 
 module.exports = app;

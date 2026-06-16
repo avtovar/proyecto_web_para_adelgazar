@@ -10,47 +10,60 @@ if (connectionString) {
 
 const pool = new Pool({ connectionString });
 
+let initialized = false;
+
+async function ensureInit() {
+  if (initialized) return;
+  initialized = true;
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        nombre TEXT NOT NULL,
+        fecha_nac TEXT NOT NULL,
+        peso_inicial NUMERIC(5,1) NOT NULL,
+        sexo CHAR(1) NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS peso_semanal (
+        id SERIAL PRIMARY KEY,
+        usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        fecha TEXT NOT NULL,
+        peso NUMERIC(5,1) NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS sesiones (
+        id SERIAL PRIMARY KEY,
+        usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        fecha TEXT NOT NULL,
+        duracion_minutos INTEGER NOT NULL,
+        tipo_ejercicio TEXT DEFAULT 'Ejercicio',
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+  } catch (err) {
+    initialized = false;
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 async function query(text, params) {
+  await ensureInit();
   const client = await pool.connect();
   try {
     return await client.query(text, params);
   } finally {
     client.release();
   }
-}
-
-async function init() {
-  await query(`
-    CREATE TABLE IF NOT EXISTS usuarios (
-      id SERIAL PRIMARY KEY,
-      email TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      nombre TEXT NOT NULL,
-      fecha_nac TEXT NOT NULL,
-      peso_inicial NUMERIC(5,1) NOT NULL,
-      sexo CHAR(1) NOT NULL,
-      created_at TIMESTAMP DEFAULT NOW()
-    )
-  `);
-  await query(`
-    CREATE TABLE IF NOT EXISTS peso_semanal (
-      id SERIAL PRIMARY KEY,
-      usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-      fecha TEXT NOT NULL,
-      peso NUMERIC(5,1) NOT NULL,
-      created_at TIMESTAMP DEFAULT NOW()
-    )
-  `);
-  await query(`
-    CREATE TABLE IF NOT EXISTS sesiones (
-      id SERIAL PRIMARY KEY,
-      usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-      fecha TEXT NOT NULL,
-      duracion_minutos INTEGER NOT NULL,
-      tipo_ejercicio TEXT DEFAULT 'Ejercicio',
-      created_at TIMESTAMP DEFAULT NOW()
-    )
-  `);
 }
 
 async function createUser(user) {
@@ -108,4 +121,4 @@ async function getTotalMinutes(userId) {
   return Number(result.rows[0].total);
 }
 
-module.exports = { init, createUser, findUserByEmail, findUserById, addWeight, getWeights, addSession, getTotalMinutes };
+module.exports = { createUser, findUserByEmail, findUserById, addWeight, getWeights, addSession, getTotalMinutes };
