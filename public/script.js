@@ -17,9 +17,18 @@ function today() {
 
 function setMessage(id, text, type = 'success') {
   const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = text;
-  el.className = `message ${type}`;
+  if (el) {
+    el.textContent = text;
+    el.className = `message ${type}`;
+  }
+}
+
+function setLoading(buttonId, loading) {
+  const btn = document.getElementById(buttonId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.dataset.originalText = btn.dataset.originalText || btn.textContent;
+  btn.textContent = loading ? 'Cargando...' : btn.dataset.originalText;
 }
 
 async function api(url, options = {}) {
@@ -36,7 +45,7 @@ async function cargarEjercicios() {
   try {
     const res = await fetch('/ejercicios.json');
     ejerciciosData = await res.json();
-  } catch (error) {
+  } catch {
     document.getElementById('listaEjercicios').innerHTML = '<p class="empty-state">No se pudieron cargar los ejercicios.</p>';
   }
 }
@@ -61,6 +70,12 @@ function rangoPorPeso(peso) {
   return '151-250';
 }
 
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 function renderEjercicios() {
   const contenedor = document.getElementById('listaEjercicios');
   if (!ultimoPeso || !Object.keys(ejerciciosData).length) {
@@ -76,12 +91,20 @@ function renderEjercicios() {
   const lista = ejerciciosRango[tipoSeleccionado] || [];
   contenedor.innerHTML = lista.map((ejercicio) => `
     <article class="exercise-card">
-      <div class="exercise-time">${ejercicio.duracion_sugerida || 10} min</div>
-      <h4>${ejercicio.nombre}</h4>
-      <p>${ejercicio.explicacion}</p>
-      <span>${ejercicio.series}</span>
+      <div class="exercise-time">${escHtml(ejercicio.duracion_sugerida || 10)} min</div>
+      <h4>${escHtml(ejercicio.nombre)}</h4>
+      <p>${escHtml(ejercicio.explicacion)}</p>
+      <span>${escHtml(ejercicio.series)}</span>
     </article>
   `).join('');
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function renderGraficoPeso(data) {
@@ -103,13 +126,13 @@ function renderGraficoPeso(data) {
   const points = data.map((item, index) => {
     const x = data.length > 1 ? padding + index * stepX : width / 2;
     const y = height - padding - ((Number(item.peso) - min) / range) * (height - padding * 2);
-    return { x, y, ...item };
+    return { x, y, fecha: escHtml(item.fecha), peso: Number(item.peso).toFixed(1) };
   });
 
-  const path = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
-  const circles = points.map((point) => `
-    <circle cx="${point.x}" cy="${point.y}" r="5">
-      <title>${point.fecha}: ${Number(point.peso).toFixed(1)} kg</title>
+  const path = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+  const circles = points.map((p) => `
+    <circle cx="${p.x}" cy="${p.y}" r="5">
+      <title>${p.fecha}: ${p.peso} kg</title>
     </circle>
   `).join('');
 
@@ -146,8 +169,7 @@ async function mostrarPanel(user) {
   document.getElementById('userName').textContent = user.nombre;
   authScreen.hidden = true;
   mainPanel.hidden = false;
-  await cargarHistorialPeso();
-  await cargarTotalTiempo();
+  await Promise.all([cargarHistorialPeso(), cargarTotalTiempo()]);
 }
 
 loginTab.addEventListener('click', () => activarTab('login'));
@@ -156,6 +178,7 @@ registerTab.addEventListener('click', () => activarTab('register'));
 registerForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   setMessage('registerError', '', 'error');
+  setLoading('registerSubmitBtn', true);
 
   try {
     await api('/api/registro', {
@@ -174,12 +197,15 @@ registerForm.addEventListener('submit', async (e) => {
     setMessage('loginError', 'Registro exitoso. Inicia sesion para continuar.', 'success');
   } catch (error) {
     setMessage('registerError', error.message, 'error');
+  } finally {
+    setLoading('registerSubmitBtn', false);
   }
 });
 
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   setMessage('loginError', '', 'error');
+  setLoading('loginSubmitBtn', true);
 
   try {
     const data = await api('/api/login', {
@@ -192,6 +218,8 @@ loginForm.addEventListener('submit', async (e) => {
     await mostrarPanel(data.user);
   } catch (error) {
     setMessage('loginError', error.message, 'error');
+  } finally {
+    setLoading('loginSubmitBtn', false);
   }
 });
 
@@ -217,6 +245,7 @@ document.getElementById('guardarPeso').addEventListener('click', async () => {
     return;
   }
 
+  setLoading('guardarPeso', true);
   try {
     await api('/api/peso', {
       method: 'POST',
@@ -227,6 +256,8 @@ document.getElementById('guardarPeso').addEventListener('click', async () => {
     await cargarHistorialPeso();
   } catch (error) {
     setMessage('pesoMessage', error.message, 'error');
+  } finally {
+    setLoading('guardarPeso', false);
   }
 });
 
@@ -238,6 +269,7 @@ document.getElementById('guardarTiempo').addEventListener('click', async () => {
     return;
   }
 
+  setLoading('guardarTiempo', true);
   try {
     await api('/api/sesion', {
       method: 'POST',
@@ -253,6 +285,8 @@ document.getElementById('guardarTiempo').addEventListener('click', async () => {
     await cargarTotalTiempo();
   } catch (error) {
     setMessage('tiempoMessage', error.message, 'error');
+  } finally {
+    setLoading('guardarTiempo', false);
   }
 });
 
@@ -273,7 +307,7 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
       authScreen.hidden = false;
       mainPanel.hidden = true;
     }
-  } catch (error) {
+  } catch {
     authScreen.hidden = false;
     mainPanel.hidden = true;
   }

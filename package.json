@@ -1,9 +1,19 @@
 {
-  "name": "ejercicios-adelgazar",
-  "version": "1.0.0",
+  "name": "metodo-adelgazar",
+  "version": "2.0.0",
   "description": "Web de ejercicios para adelgazar por rango de peso",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.0"
   }
 }

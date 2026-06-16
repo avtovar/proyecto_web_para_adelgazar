@@ -2,63 +2,78 @@
 
 Aplicación web para el registro de peso, seguimiento de actividad física y recomendaciones de ejercicios personalizados según el rango de peso del usuario.
 
-## 🚀 Cómo ejecutar el proyecto
+## Stack
 
-### 1. Requisitos previos
-- Tener instalado [Node.js](https://nodejs.org/) (versión 16 o superior recomendada).
+- **Backend:** Node.js + Express
+- **Base de datos:** PostgreSQL (Vercel Postgres / Neon)
+- **Frontend:** HTML + CSS + JavaScript vanilla
+- **Auth:** JWT + cookies HttpOnly
+- **Deploy:** Vercel
 
-### 2. Instalación
-Descarga o clona el proyecto en una carpeta y abre una terminal en esa ubicación.
+## Requisitos
 
-### 3. Ejecutar el servidor
-Ejecuta el siguiente comando en tu terminal (PowerShell, CMD o terminal de VS Code):
+- Node.js 18+
+- PostgreSQL (local o Vercel Postgres)
+
+## Desarrollo local
+
 ```bash
-node server.js
+# 1. Instalar dependencias
+npm install
+
+# 2. Crear archivo .env con tu conexion a PostgreSQL
+cp .env.example .env
+# Editar .env con tus credenciales
+
+# 3. Iniciar servidor
+npm run dev
+# Servidor en http://localhost:3000
 ```
-Deberías ver el mensaje: `Servidor corriendo en http://localhost:3000`
 
-### 4. Abrir la aplicación
-Abre tu navegador web y entra a la siguiente dirección:
-[http://localhost:3000](http://localhost:3000)
+## Variables de entorno
 
----
+| Variable | Descripción |
+|---|---|
+| `POSTGRES_URL` | URL de conexión a PostgreSQL |
+| `JWT_SECRET` | Secreto para firmar tokens JWT |
+| `PORT` | Puerto del servidor (default 3000) |
 
-## 📊 Cómo ver la Base de Datos
+## API
 
-El proyecto utiliza un sistema de almacenamiento basado en archivos JSON para simplificar la gestión sin necesidad de instalar motores de bases de datos externos.
+| Método | Ruta | Auth | Descripción |
+|---|---|---|---|
+| POST | `/api/registro` | No | Registrar usuario |
+| POST | `/api/login` | No | Iniciar sesión |
+| POST | `/api/logout` | No | Cerrar sesión |
+| GET | `/api/verificar` | No | Verificar sesión activa |
+| GET | `/api/perfil` | Sí | Obtener perfil del usuario |
+| POST | `/api/peso` | Sí | Registrar peso |
+| GET | `/api/peso/historial` | Sí | Historial de peso |
+| POST | `/api/sesion` | Sí | Registrar sesión de ejercicio |
+| GET | `/api/sesiones/total` | Sí | Minutos totales acumulados |
 
-### Ubicación de los datos
-Todos los datos registrados (usuarios, historial de peso y sesiones) se guardan en la carpeta:
-`f:\metodo_para_adelgazar\data\`
+## Estructura del proyecto
 
-### Archivos principales:
-- **`data/ejercicios.json`**: Contiene la información de los usuarios registrados, sus pesos y sus sesiones de entrenamiento. 
-  - *Nota: Las contraseñas se guardan encriptadas por seguridad.*
-- **`public/ejercicios.json`**: Este archivo es de **solo lectura** para la aplicación y contiene la lógica de qué ejercicios mostrar según el rango de peso.
-
-### Cómo consultarlos:
-1. Navega hasta la carpeta `data`.
-2. Abre el archivo `ejercicios.json` con cualquier editor de texto (Bloc de notas, VS Code, Sublime Text).
-3. Verás una estructura como esta:
-   ```json
-   {
-     "usuarios": [...],
-     "peso_semanal": [...],
-     "sesiones": [...]
-   }
-   ```
-
----
-
-## 🛠️ Solución de problemas comunes
-
-### Error: `EADDRINUSE: address already in use :::3000`
-Este error ocurre si el servidor ya se está ejecutando en otra terminal o quedó "colgado". 
-**Solución en Windows (PowerShell):**
-```powershell
-Stop-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess -Force
 ```
-Luego vuelve a ejecutar `node server.js`.
+├── api/
+│   ├── index.js          # Express app (entry point Vercel)
+│   └── db.js             # Capa de base de datos PostgreSQL
+├── public/
+│   ├── index.html        # Frontend
+│   ├── script.js         # Lógica del cliente
+│   ├── style.css         # Estilos
+│   └── ejercicios.json   # Catálogo de ejercicios por rango
+├── server.js             # Servidor local
+├── vercel.json           # Configuración de Vercel
+└── package.json
+```
 
-### Error: `Failed to fetch`
-Ocurre si intentas registrarte y el servidor no está encendido o si abriste el archivo `index.html` directamente desde la carpeta en lugar de usar `http://localhost:3000`.
+## Deploy en Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+1. Conecta tu repositorio de GitHub
+2. Vercel detectará automáticamente la configuración
+3. Agrega una base de datos Postgres desde el dashboard de Vercel (Storage → Postgres → Create)
+4. Las variables de entorno se configuran automáticamente
+5. ¡Deploy automático en cada push a main!
