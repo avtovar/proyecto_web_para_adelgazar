@@ -306,6 +306,7 @@ document.getElementById('editProfileBtn').addEventListener('click', async () => 
     document.getElementById('editPesoInicial').value = data.peso_inicial || '';
     document.getElementById('editFechaNac').value = data.fecha_nac || '';
     editModal.hidden = false;
+    document.getElementById('editNombre').focus();
   } catch (error) {
     setMessage('editProfileMessage', error.message, 'error');
   }
