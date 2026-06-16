@@ -19,6 +19,18 @@
         "explicacion": "Con rodillas apenas flexionadas, lleva la cadera hacia atrás y sube apretando glúteos.",
         "series": "3 series de 10 repeticiones",
         "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Zancadas con mancuernas",
+        "explicacion": "Da un paso al frente y flexiona ambas rodillas. Mantén el torso erguido y alterna piernas.",
+        "series": "3 series de 8 por pierna",
+        "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Press de banca con mancuernas",
+        "explicacion": "Acostado en el piso o banca, empuja las mancuernas hacia arriba desde el pecho.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 8
       }
     ],
     "sinPesas": [
@@ -38,6 +50,18 @@
         "nombre": "Plancha inclinada",
         "explicacion": "Apoya manos sobre una mesa firme y mantén abdomen activo sin hundir la cintura.",
         "series": "4 repeticiones de 20 segundos",
+        "duracion_sugerida": 6
+      },
+      {
+        "nombre": "Mountain climbers lentos",
+        "explicacion": "En posición de plancha alta, lleva una rodilla al pecho alternando. Mantén el ritmo controlado.",
+        "series": "3 rondas de 30 segundos",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Plancha lateral",
+        "explicacion": "Apoyo en antebrazo y costado del pie, eleva la cadera y sostén sin hundirte.",
+        "series": "3 repeticiones de 20 segundos por lado",
         "duracion_sugerida": 6
       }
     ]
@@ -62,6 +86,18 @@
         "explicacion": "Sube una mancuerna por vez, codos cerca del cuerpo y muñecas firmes.",
         "series": "3 series de 12 repeticiones",
         "duracion_sugerida": 7
+      },
+      {
+        "nombre": "Peso muerto con mancuernas",
+        "explicacion": "Con piernas separadas al ancho de cadera, baja las mancuernas frente a ti manteniendo la espalda recta.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 9
+      },
+      {
+        "nombre": "Fondos en silla con peso",
+        "explicacion": "Apoya manos en el borde de una silla, baja flexionando codos y sube. Coloca una mancuerna en el regazo si puedes.",
+        "series": "3 series de 8 repeticiones",
+        "duracion_sugerida": 8
       }
     ],
     "sinPesas": [
@@ -82,6 +118,18 @@
         "explicacion": "Sube y baja de un escalón bajo, alternando pierna líder y usando apoyo si hace falta.",
         "series": "5 rondas de 45 segundos",
         "duracion_sugerida": 10
+      },
+      {
+        "nombre": "Sentadillas sin peso",
+        "explicacion": "Baja como si fueras a sentarte, mantén el peso en los talones y sube con control.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Superman",
+        "explicacion": "Acostado boca abajo, eleva brazos y piernas extendidos simultáneamente. Aprieta la espalda baja.",
+        "series": "3 series de 8 repeticiones",
+        "duracion_sugerida": 6
       }
     ]
   },
@@ -105,6 +153,18 @@
         "explicacion": "Trabaja la espalda llevando los codos hacia atrás, sin encoger hombros.",
         "series": "3 series de 12 repeticiones",
         "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Curl de bíceps con mancuernas",
+        "explicacion": "De pie o sentado, sube ambas mancuernas a la vez manteniendo codos fijos al costado del cuerpo.",
+        "series": "3 series de 10 repeticiones",
+        "duracion_sugerida": 7
+      },
+      {
+        "nombre": "Elevaciones de talones con peso",
+        "explicacion": "Sujeta mancuernas y ponte de puntillas sobre un escalón bajo. Sube y baja lento trabajando pantorrillas.",
+        "series": "3 series de 12 repeticiones",
+        "duracion_sugerida": 7
       }
     ],
     "sinPesas": [
@@ -125,6 +185,18 @@
         "explicacion": "Apoya antebrazos en la pared y conserva una línea recta de cabeza a talones.",
         "series": "4 repeticiones de 25 segundos",
         "duracion_sugerida": 6
+      },
+      {
+        "nombre": "Elevación de rodillas",
+        "explicacion": "De pie, eleva una rodilla hacia el pecho alternando. Acompaña con brazo opuesto para equilibrio.",
+        "series": "3 series de 10 por pierna",
+        "duracion_sugerida": 8
+      },
+      {
+        "nombre": "Puente a una pierna",
+        "explicacion": "Acostado boca arriba, apoya un pie y eleva la cadera. La otra pierna extendida al frente.",
+        "series": "3 series de 6 por pierna",
+        "duracion_sugerida": 8
       }
     ]
   },
@@ -148,6 +220,18 @@
         "explicacion": "Levanta mancuernas livianas hasta media altura, lento y sin balancear el torso.",
         "series": "2 series de 10 repeticiones",
         "duracion_sugerida": 6
+      },
+      {
+        "nombre": "Curl de bíceps con mancuerna liviana",
+        "explicacion": "Sentado con espalda apoyada, flexiona y extiende el codo llevando la mancuerna al hombro.",
+        "series": "2 series de 10 repeticiones",
+        "duracion_sugerida": 6
+      },
+      {
+        "nombre": "Press de pecho con banda anclada",
+        "explicacion": "Ancla una banda a la espalda y empuja al frente desde el pecho, como un press de banca.",
+        "series": "3 series de 8 repeticiones",
+        "duracion_sugerida": 7
       }
     ],
     "sinPesas": [
@@ -168,6 +252,18 @@
         "explicacion": "Baja solo hasta donde puedas controlar, usando una silla firme como referencia.",
         "series": "3 series de 6 repeticiones",
         "duracion_sugerida": 7
+      },
+      {
+        "nombre": "Rotaciones de tronco sentado",
+        "explicacion": "Sentado, gira el torso a un lado y al otro con movimientos controlados. Mantén cadera quieta.",
+        "series": "2 series de 10 por lado",
+        "duracion_sugerida": 6
+      },
+      {
+        "nombre": "Caminata en el lugar con brazos",
+        "explicacion": "Camina sin desplazarte elevando rodillas suavemente y moviendo brazos de forma coordinada.",
+        "series": "4 rondas de 1 minuto",
+        "duracion_sugerida": 8
       }
     ]
   },
@@ -191,6 +287,18 @@
         "explicacion": "Ancla una banda de forma segura y lleva codos atrás, manteniendo el pecho abierto.",
         "series": "3 series de 8 repeticiones",
         "duracion_sugerida": 7
+      },
+      {
+        "nombre": "Elevaciones frontales con mancuerna liviana",
+        "explicacion": "Con una mancuerna liviana en cada mano, eleva los brazos al frente hasta la altura de hombros.",
+        "series": "2 series de 8 repeticiones",
+        "duracion_sugerida": 5
+      },
+      {
+        "nombre": "Curl de piernas con banda",
+        "explicacion": "Acostado boca abajo, ancla una banda a un tobillo y flexiona la rodilla llevando el talón al glúteo.",
+        "series": "2 series de 8 por pierna",
+        "duracion_sugerida": 7
       }
     ],
     "sinPesas": [
@@ -211,6 +319,18 @@
         "explicacion": "Extiende una pierna hasta donde sea cómodo, aprieta el muslo y baja lento.",
         "series": "3 series de 8 por pierna",
         "duracion_sugerida": 7
+      },
+      {
+        "nombre": "Abducción de cadera sentado",
+        "explicacion": "Sentado, abre las piernas separando las rodillas contra resistencia suave de una banda o tus manos.",
+        "series": "2 series de 8 repeticiones",
+        "duracion_sugerida": 5
+      },
+      {
+        "nombre": "Estiramiento de isquiotibiales activo",
+        "explicacion": "Sentado, extiende una pierna y lleva el pecho hacia el muslo sin forzar. Mantén 15 segundos.",
+        "series": "3 rondas de 15 segundos por pierna",
+        "duracion_sugerida": 6
       }
     ]
   },
@@ -234,6 +354,18 @@
         "explicacion": "Abre los brazos con rango corto y vuelve lento, sin dolor en hombros.",
         "series": "2 series de 8 repeticiones",
         "duracion_sugerida": 6
+      },
+      {
+        "nombre": "Press de hombros con banda",
+        "explicacion": "Sentado, pisa la banda y sube los brazos por encima de la cabeza como si hicieras press.",
+        "series": "2 series de 6 repeticiones",
+        "duracion_sugerida": 5
+      },
+      {
+        "nombre": "Curl de bíceps con banda",
+        "explicacion": "Pisa la banda con un pie y flexiona el codo llevando la mano al hombro. Controla el descenso.",
+        "series": "2 series de 8 por brazo",
+        "duracion_sugerida": 6
       }
     ],
     "sinPesas": [
@@ -254,6 +386,18 @@
         "explicacion": "Sentado, exhala lento y activa el abdomen como si cerraras un cierre. Relaja y repite.",
         "series": "3 rondas de 8 respiraciones",
         "duracion_sugerida": 6
+      },
+      {
+        "nombre": "Balanceo de brazos sentado",
+        "explicacion": "Sentado, balancea los brazos hacia adelante y atrás de forma suave para movilizar hombros.",
+        "series": "2 rondas de 30 segundos",
+        "duracion_sugerida": 4
+      },
+      {
+        "nombre": "Movilidad de cuello",
+        "explicacion": "Inclina la cabeza a un lado y al otro, luego gira suavemente. No fuerces el movimiento.",
+        "series": "1 ronda de 10 repeticiones por movimiento",
+        "duracion_sugerida": 4
       }
     ]
   }
