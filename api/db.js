@@ -1,8 +1,8 @@
 const { Pool } = require('pg');
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
+let connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
+connectionString = connectionString.replace(/[?&]sslmode=[^&]+/g, '');
+connectionString = connectionString.replace(/[?&]$/, '');
 
 const pool = new Pool({
   connectionString,
