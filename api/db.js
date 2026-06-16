@@ -91,6 +91,24 @@ async function findUserById(id) {
   return result.rows[0] || null;
 }
 
+async function updateUser(id, fields) {
+  const sets = [];
+  const values = [];
+  let idx = 1;
+  for (const [key, value] of Object.entries(fields)) {
+    if (value !== undefined) {
+      sets.push(`${key} = $${idx++}`);
+      values.push(value);
+    }
+  }
+  if (!sets.length) return;
+  values.push(Number(id));
+  await query(
+    `UPDATE usuarios SET ${sets.join(', ')} WHERE id = $${idx}`,
+    values
+  );
+}
+
 async function addWeight(entry) {
   await query(
     'INSERT INTO peso_semanal (usuario_id, fecha, peso) VALUES ($1, $2, $3)',
@@ -121,4 +139,4 @@ async function getTotalMinutes(userId) {
   return Number(result.rows[0].total);
 }
 
-module.exports = { createUser, findUserByEmail, findUserById, addWeight, getWeights, addSession, getTotalMinutes };
+module.exports = { createUser, findUserByEmail, findUserById, updateUser, addWeight, getWeights, addSession, getTotalMinutes };

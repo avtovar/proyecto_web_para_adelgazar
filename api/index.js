@@ -156,6 +156,35 @@ app.get('/api/perfil', requireAuth, asyncHandler(async (req, res) => {
   return res.json(safeUser);
 }));
 
+app.put('/api/perfil', requireAuth, asyncHandler(async (req, res) => {
+  const { nombre, peso_inicial, fecha_nac } = req.body;
+  const fields = {};
+
+  if (nombre !== undefined) {
+    if (!nombre.trim()) return res.status(400).json({ error: 'El nombre no puede estar vacio' });
+    fields.nombre = nombre.trim();
+  }
+  if (peso_inicial !== undefined) {
+    const p = Number(peso_inicial);
+    if (!Number.isFinite(p) || p < 40 || p > 250) {
+      return res.status(400).json({ error: 'Ingresa un peso valido entre 40 y 250 kg' });
+    }
+    fields.peso_inicial = p;
+  }
+  if (fecha_nac !== undefined) {
+    const edad = calcularEdad(fecha_nac);
+    if (edad === null) return res.status(400).json({ error: 'Fecha de nacimiento invalida' });
+    if (edad < 18) return res.status(400).json({ error: 'Debes ser mayor de 18 anos' });
+    fields.fecha_nac = fecha_nac;
+  }
+
+  await db.updateUser(req.user.id, fields);
+
+  const user = await db.findUserById(req.user.id);
+  const { password, ...safeUser } = user;
+  return res.json({ success: true, user: safeUser });
+}));
+
 app.post('/api/peso', requireAuth, asyncHandler(async (req, res) => {
   const { peso, fecha } = req.body;
   if (!fecha || !Number.isFinite(Number(peso)) || Number(peso) < 40 || Number(peso) > 250) {

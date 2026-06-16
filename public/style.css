@@ -203,6 +203,11 @@ label {
   margin-bottom: 18px;
 }
 
+.topbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .topbar h2 {
   margin: 4px 0 0;
   font-size: clamp(1.8rem, 4vw, 3rem);
@@ -363,6 +368,57 @@ label {
   margin: 0;
   color: var(--muted);
   font-weight: 700;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 41, 51, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.modal-card {
+  width: min(440px, 100%);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.modal-close {
+  background: none;
+  color: var(--muted);
+  font-size: 1.5rem;
+  min-height: auto;
+  padding: 4px 8px;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.modal-form {
+  display: grid;
+  gap: 10px;
 }
 
 [hidden] {

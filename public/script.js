@@ -295,6 +295,56 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
   location.reload();
 });
 
+const editModal = document.getElementById('editProfileModal');
+const editForm = document.getElementById('editProfileForm');
+
+document.getElementById('editProfileBtn').addEventListener('click', async () => {
+  setMessage('editProfileMessage', '', 'error');
+  try {
+    const data = await api('/api/perfil');
+    document.getElementById('editNombre').value = data.nombre || '';
+    document.getElementById('editPesoInicial').value = data.peso_inicial || '';
+    document.getElementById('editFechaNac').value = data.fecha_nac || '';
+    editModal.hidden = false;
+  } catch (error) {
+    setMessage('editProfileMessage', error.message, 'error');
+  }
+});
+
+document.getElementById('closeEditModal').addEventListener('click', () => {
+  editModal.hidden = true;
+});
+
+editModal.addEventListener('click', (e) => {
+  if (e.target === editModal) editModal.hidden = true;
+});
+
+editForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  setMessage('editProfileMessage', '', 'error');
+  setLoading('editProfileSubmitBtn', true);
+
+  try {
+    const data = await api('/api/perfil', {
+      method: 'PUT',
+      body: JSON.stringify({
+        nombre: document.getElementById('editNombre').value,
+        peso_inicial: parseFloat(document.getElementById('editPesoInicial').value),
+        fecha_nac: document.getElementById('editFechaNac').value
+      })
+    });
+    document.getElementById('userName').textContent = data.user.nombre;
+    currentUser.nombre = data.user.nombre;
+    currentUser.peso_inicial = data.user.peso_inicial;
+    setMessage('editProfileMessage', 'Perfil actualizado correctamente.', 'success');
+    setTimeout(() => { editModal.hidden = true; }, 1200);
+  } catch (error) {
+    setMessage('editProfileMessage', error.message, 'error');
+  } finally {
+    setLoading('editProfileSubmitBtn', false);
+  }
+});
+
 (async () => {
   fechaPeso.value = today();
   await cargarEjercicios();
