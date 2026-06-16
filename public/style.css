@@ -318,6 +318,48 @@ label {
   padding: 6px 10px;
 }
 
+.video-btn {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  min-height: auto;
+  box-shadow: 0 3px 10px rgba(196, 106, 43, 0.3);
+  transition: transform 0.15s, background 0.15s;
+}
+
+.video-btn:hover {
+  transform: scale(1.08);
+  background: #d47830;
+}
+
+.modal-video {
+  width: min(640px, 100%);
+}
+
+#videoWrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+}
+
+#videoWrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+}
+
 .content-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);

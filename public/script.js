@@ -95,9 +95,42 @@ function renderEjercicios() {
       <h4>${escHtml(ejercicio.nombre)}</h4>
       <p>${escHtml(ejercicio.explicacion)}</p>
       <span>${escHtml(ejercicio.series)}</span>
+      ${ejercicio.videoId ? `<button class="video-btn" data-video="${escHtml(ejercicio.videoId)}" data-nombre="${escHtml(ejercicio.nombre)}" aria-label="Ver video de ${escHtml(ejercicio.nombre)}" type="button">▶</button>` : ''}
     </article>
   `).join('');
 }
+
+function openVideoModal(videoId, nombre) {
+  const modal = document.getElementById('videoModal');
+  const iframe = document.getElementById('videoIframe');
+  document.getElementById('videoModalTitle').textContent = nombre;
+  iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+  modal.hidden = false;
+}
+
+function closeVideoModal() {
+  const modal = document.getElementById('videoModal');
+  const iframe = document.getElementById('videoIframe');
+  modal.hidden = true;
+  iframe.src = '';
+}
+
+document.getElementById('listaEjercicios').addEventListener('click', (e) => {
+  const btn = e.target.closest('.video-btn');
+  if (btn) {
+    openVideoModal(btn.dataset.video, btn.dataset.nombre);
+  }
+});
+
+document.getElementById('closeVideoModal').addEventListener('click', closeVideoModal);
+
+document.getElementById('videoModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('videoModal')) closeVideoModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !document.getElementById('videoModal').hidden) closeVideoModal();
+});
 
 function escHtml(str) {
   return String(str)
