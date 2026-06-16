@@ -1,20 +1,20 @@
-const { Client } = require('pg');
+const { Pool } = require('pg');
 
-function getConnectionString() {
-  return process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
-}
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
+
+const pool = new Pool({
+  connectionString,
+  ssl: { rejectUnauthorized: false }
+});
 
 async function query(text, params) {
-  const client = new Client({
-    connectionString: getConnectionString(),
-    ssl: { rejectUnauthorized: false }
-  });
-  await client.connect();
+  const client = await pool.connect();
   try {
-    const result = await client.query(text, params);
-    return result;
+    return await client.query(text, params);
   } finally {
-    await client.end().catch(() => {});
+    client.release();
   }
 }
 
