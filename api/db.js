@@ -1,13 +1,14 @@
 const { Pool } = require('pg');
 
 let connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
-connectionString = connectionString.replace(/[?&]sslmode=[^&]+/g, '');
-connectionString = connectionString.replace(/[?&]$/, '');
+if (connectionString) {
+  connectionString = connectionString.replace(/sslmode=[^&]+/g, 'sslmode=no-verify');
+  if (!connectionString.includes('sslmode=')) {
+    connectionString += (connectionString.includes('?') ? '&' : '?') + 'sslmode=no-verify';
+  }
+}
 
-const pool = new Pool({
-  connectionString,
-  ssl: { rejectUnauthorized: false }
-});
+const pool = new Pool({ connectionString });
 
 async function query(text, params) {
   const client = await pool.connect();
