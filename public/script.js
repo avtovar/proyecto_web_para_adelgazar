@@ -15,6 +15,15 @@ function today() {
   return new Date().toISOString().split('T')[0];
 }
 
+function showNotification(text, type = 'error') {
+  const el = document.getElementById('notification');
+  if (el) {
+    el.textContent = text;
+    el.className = `notification ${type}`;
+    el.hidden = false;
+  }
+}
+
 function setMessage(id, text, type = 'success') {
   const el = document.getElementById(id);
   if (el) {
@@ -324,6 +333,7 @@ document.getElementById('guardarTiempo').addEventListener('click', async () => {
 });
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
+  showNotification('', 'error');
   await api('/api/logout', { method: 'POST' });
   location.reload();
 });
@@ -332,7 +342,7 @@ const editModal = document.getElementById('editProfileModal');
 const editForm = document.getElementById('editProfileForm');
 
 document.getElementById('editProfileBtn').addEventListener('click', async () => {
-  setMessage('editProfileMessage', '', 'error');
+  showNotification('', 'error');
   try {
     const data = await api('/api/perfil');
     document.getElementById('editNombre').value = data.nombre || '';
@@ -341,12 +351,15 @@ document.getElementById('editProfileBtn').addEventListener('click', async () => 
     editModal.hidden = false;
     document.getElementById('editNombre').focus();
   } catch (error) {
+    console.error('Error al cargar perfil:', error);
+    showNotification(error.message, 'error');
     setMessage('editProfileMessage', error.message, 'error');
   }
 });
 
 document.getElementById('closeEditModal').addEventListener('click', () => {
   editModal.hidden = true;
+  showNotification('', 'error');
 });
 
 editModal.addEventListener('click', (e) => {
