@@ -1,6 +1,11 @@
 const { Pool } = require('pg');
+const logger = require('./logger');
 
 let connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
+logger.db('bootstrap', 'string de conexion', {
+  present: !!connectionString,
+  host: connectionString ? (() => { try { return new URL(connectionString).host; } catch { return 'invalida'; } })() : null
+});
 if (connectionString) {
   connectionString = connectionString.replace(/sslmode=[^&]+/g, 'sslmode=no-verify');
   if (!connectionString.includes('sslmode=')) {
@@ -10,6 +15,10 @@ if (connectionString) {
 
 const pool = new Pool({ connectionString });
 
+pool.on('error', (err) => {
+  logger.db('pool', 'error en pool de conexiones', { message: err.message });
+});
+
 let initialized = false;
 let initPromise = null;
 
@@ -17,6 +26,7 @@ async function ensureInit() {
   if (initialized) return;
   if (initPromise) return initPromise;
   initPromise = (async () => {
+    logger.db('ensureInit', 'creando tablas...');
     const client = await pool.connect();
     try {
       await client.query(`
@@ -51,7 +61,9 @@ async function ensureInit() {
         )
       `);
       initialized = true;
+      logger.db('ensureInit', 'tablas listas');
     } catch (err) {
+      logger.db('ensureInit', 'ERROR al crear tablas', { message: err.message, code: err.code });
       initPromise = null;
       throw err;
     } finally {
@@ -65,7 +77,11 @@ async function query(text, params) {
   await ensureInit();
   const client = await pool.connect();
   try {
+    logger.db('query', text.slice(0, 60), { params: params ? params.length : 0 });
     return await client.query(text, params);
+  } catch (err) {
+    logger.db('query', 'ERROR', { message: err.message, code: err.code, sql: text.slice(0, 80) });
+    throw err;
   } finally {
     client.release();
   }

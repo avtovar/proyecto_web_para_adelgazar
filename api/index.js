@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const logger = require('./logger');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
@@ -13,9 +14,8 @@ const path = require('path');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-if (NODE_ENV === 'production' && !process.env.JWT_SECRET) {
-  console.error('JWT_SECRET es obligatorio en produccion. Definelo en las variables de entorno.');
-  process.exit(1);
+if (!process.env.JWT_SECRET) {
+  logger.warn('bootstrap', 'JWT_SECRET no definido. Se genera uno aleatorio (las sesiones se invalidaran en cada reinicio o nueva instancia). Define JWT_SECRET en produccion.');
 }
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
 
@@ -53,6 +53,19 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '..', 'public')));
+
+app.use((req, res, next) => {
+  const started = Date.now();
+  res.on('finish', () => {
+    logger.http('req', `${req.method} ${req.originalUrl}`, {
+      status: res.statusCode,
+      ms: Date.now() - started,
+      hasCookie: !!req.cookies?.token,
+      hasBearer: !!(req.headers.authorization && req.headers.authorization.startsWith('Bearer '))
+    });
+  });
+  next();
+});
 
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -94,9 +107,13 @@ function calcularEdad(fecha) {
 
 function extractToken(req) {
   const fromCookie = req.cookies?.token;
-  if (fromCookie) return fromCookie;
+  if (fromCookie) {
+    logger.debug('auth', 'token desde cookie');
+    return fromCookie;
+  }
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
+    logger.debug('auth', 'token desde header Bearer');
     return authHeader.slice(7);
   }
   return null;
@@ -104,11 +121,16 @@ function extractToken(req) {
 
 function requireAuth(req, res, next) {
   const token = extractToken(req);
-  if (!token) return res.status(401).json({ error: 'No autenticado' });
+  if (!token) {
+    logger.auth('requireAuth', '401 no autenticado (sin token)', { path: req.originalUrl });
+    return res.status(401).json({ error: 'No autenticado' });
+  }
   try {
     req.user = jwt.verify(token, JWT_SECRET);
+    logger.auth('requireAuth', 'ok', { id: req.user.id, path: req.originalUrl });
     next();
-  } catch {
+  } catch (err) {
+    logger.auth('requireAuth', '401 sesion invalida', { reason: err.message, path: req.originalUrl });
     res.clearCookie('token', COOKIE_OPTS);
     return res.status(401).json({ error: 'Sesion invalida' });
   }
@@ -118,6 +140,7 @@ app.post('/api/registro', asyncHandler(async (req, res) => {
   const { email, password, nombre, fecha_nac, peso_inicial, sexo } = req.body;
 
   if (!email || !password || !nombre || !fecha_nac || !peso_inicial || !sexo) {
+    logger.auth('registro', '400 campos incompletos', { hasEmail: !!email });
     return res.status(400).json({ error: 'Completa todos los campos' });
   }
   if (password.length < 6) {
@@ -142,17 +165,31 @@ app.post('/api/registro', asyncHandler(async (req, res) => {
     peso_inicial: Number(peso_inicial),
     sexo
   });
+  logger.auth('registro', 'usuario creado', { id: user.id });
   return res.json({ success: true, id: user.id });
 }));
 
 app.post('/api/login', asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Completa email y contrasena' });
+  if (!email || !password) {
+    logger.auth('login', '400 campos incompletos', { hasEmail: !!email, hasPassword: !!password });
+    return res.status(400).json({ error: 'Completa email y contrasena' });
+  }
 
-  const user = await db.findUserByEmail(email.trim().toLowerCase());
-  if (!user || !verifyPassword(password, user.password)) {
+  const cleanEmail = email.trim().toLowerCase();
+  logger.auth('login', 'busqueda de usuario', { email: cleanEmail });
+  const user = await db.findUserByEmail(cleanEmail);
+
+  if (!user) {
+    logger.auth('login', '401 usuario no encontrado', { email: cleanEmail });
     return res.status(401).json({ error: 'Credenciales incorrectas' });
   }
+  const passOk = verifyPassword(password, user.password);
+  if (!passOk) {
+    logger.auth('login', '401 contrasena incorrecta', { id: user.id });
+    return res.status(401).json({ error: 'Credenciales incorrectas' });
+  }
+  logger.auth('login', 'credenciales ok, generando token', { id: user.id });
 
   const token = jwt.sign(
     { id: user.id, nombre: user.nombre, sexo: user.sexo, peso_inicial: Number(user.peso_inicial) },
@@ -161,6 +198,7 @@ app.post('/api/login', asyncHandler(async (req, res) => {
   );
 
   res.cookie('token', token, COOKIE_OPTS);
+  logger.auth('login', 'login exitoso', { id: user.id });
   return res.json({
     success: true,
     token,
@@ -175,14 +213,19 @@ app.post('/api/logout', (req, res) => {
 
 app.get('/api/verificar', asyncHandler(async (req, res) => {
   const token = extractToken(req);
-  if (!token) return res.json({ loggedIn: false });
+  if (!token) {
+    logger.auth('verificar', 'sin token -> loggedIn false');
+    return res.json({ loggedIn: false });
+  }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    logger.auth('verificar', 'token valido', { id: decoded.id });
     return res.json({
       loggedIn: true,
       user: { id: decoded.id, nombre: decoded.nombre, sexo: decoded.sexo, peso_inicial: decoded.peso_inicial }
     });
-  } catch {
+  } catch (err) {
+    logger.auth('verificar', 'token invalido', { reason: err.message });
     return res.json({ loggedIn: false });
   }
 }));
@@ -263,7 +306,13 @@ app.get('*', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  logger.error('error-handler', 'error capturado', {
+    path: req.originalUrl,
+    status: err.code === 'DUPLICATE_EMAIL' ? 400 : 500,
+    message: err.message,
+    stack: err.stack,
+    code: err.code
+  });
   const status = err.code === 'DUPLICATE_EMAIL' ? 400 : 500;
   const message = NODE_ENV === 'production' && status === 500
     ? 'Error interno del servidor'
