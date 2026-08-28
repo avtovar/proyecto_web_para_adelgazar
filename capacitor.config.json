@@ -5,7 +5,7 @@
   "server": {
     "androidScheme": "https",
     "allowNavigation": [
-      "https://*.vercel.app"
+      "https://metodoparaadelgazar.vercel.app"
     ]
   },
   "plugins": {

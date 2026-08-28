@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
@@ -10,8 +11,13 @@ const db = require('./db');
 const app = express();
 const path = require('path');
 
-const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
 const NODE_ENV = process.env.NODE_ENV || 'development';
+
+if (NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  console.error('JWT_SECRET es obligatorio en produccion. Definelo en las variables de entorno.');
+  process.exit(1);
+}
+const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
 
 const COOKIE_OPTS = {
   httpOnly: true,
@@ -35,7 +41,7 @@ app.use(compression());
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin && CORS_ORIGINS.some(o => origin.startsWith(o) || origin === o)) {
+  if (origin && CORS_ORIGINS.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
@@ -259,7 +265,10 @@ app.get('*', (req, res) => {
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   const status = err.code === 'DUPLICATE_EMAIL' ? 400 : 500;
-  res.status(status).json({ error: err.message || 'Error interno del servidor' });
+  const message = NODE_ENV === 'production' && status === 500
+    ? 'Error interno del servidor'
+    : (err.message || 'Error interno del servidor');
+  res.status(status).json({ error: message });
 });
 
 module.exports = app;

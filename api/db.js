@@ -11,49 +11,54 @@ if (connectionString) {
 const pool = new Pool({ connectionString });
 
 let initialized = false;
+let initPromise = null;
 
 async function ensureInit() {
   if (initialized) return;
-  initialized = true;
-  const client = await pool.connect();
-  try {
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS usuarios (
-        id SERIAL PRIMARY KEY,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        nombre TEXT NOT NULL,
-        fecha_nac TEXT NOT NULL,
-        peso_inicial NUMERIC(5,1) NOT NULL,
-        sexo CHAR(1) NOT NULL,
-        created_at TIMESTAMP DEFAULT NOW()
-      )
-    `);
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS peso_semanal (
-        id SERIAL PRIMARY KEY,
-        usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-        fecha TEXT NOT NULL,
-        peso NUMERIC(5,1) NOT NULL,
-        created_at TIMESTAMP DEFAULT NOW()
-      )
-    `);
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS sesiones (
-        id SERIAL PRIMARY KEY,
-        usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-        fecha TEXT NOT NULL,
-        duracion_minutos INTEGER NOT NULL,
-        tipo_ejercicio TEXT DEFAULT 'Ejercicio',
-        created_at TIMESTAMP DEFAULT NOW()
-      )
-    `);
-  } catch (err) {
-    initialized = false;
-    throw err;
-  } finally {
-    client.release();
-  }
+  if (initPromise) return initPromise;
+  initPromise = (async () => {
+    const client = await pool.connect();
+    try {
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS usuarios (
+          id SERIAL PRIMARY KEY,
+          email TEXT UNIQUE NOT NULL,
+          password TEXT NOT NULL,
+          nombre TEXT NOT NULL,
+          fecha_nac TEXT NOT NULL,
+          peso_inicial NUMERIC(5,1) NOT NULL,
+          sexo CHAR(1) NOT NULL,
+          created_at TIMESTAMP DEFAULT NOW()
+        )
+      `);
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS peso_semanal (
+          id SERIAL PRIMARY KEY,
+          usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+          fecha TEXT NOT NULL,
+          peso NUMERIC(5,1) NOT NULL,
+          created_at TIMESTAMP DEFAULT NOW()
+        )
+      `);
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS sesiones (
+          id SERIAL PRIMARY KEY,
+          usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+          fecha TEXT NOT NULL,
+          duracion_minutos INTEGER NOT NULL,
+          tipo_ejercicio TEXT DEFAULT 'Ejercicio',
+          created_at TIMESTAMP DEFAULT NOW()
+        )
+      `);
+      initialized = true;
+    } catch (err) {
+      initPromise = null;
+      throw err;
+    } finally {
+      client.release();
+    }
+  })();
+  return initPromise;
 }
 
 async function query(text, params) {
@@ -67,18 +72,21 @@ async function query(text, params) {
 }
 
 async function createUser(user) {
-  const existing = await query('SELECT id FROM usuarios WHERE email = $1', [user.email]);
-  if (existing.rows.length > 0) {
-    const error = new Error('Email ya registrado');
-    error.code = 'DUPLICATE_EMAIL';
-    throw error;
+  try {
+    const result = await query(
+      `INSERT INTO usuarios (email, password, nombre, fecha_nac, peso_inicial, sexo)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
+      [user.email, user.password, user.nombre, user.fecha_nac, user.peso_inicial, user.sexo]
+    );
+    return result.rows[0];
+  } catch (err) {
+    if (err.code === '23505') {
+      const error = new Error('Email ya registrado');
+      error.code = 'DUPLICATE_EMAIL';
+      throw error;
+    }
+    throw err;
   }
-  const result = await query(
-    `INSERT INTO usuarios (email, password, nombre, fecha_nac, peso_inicial, sexo)
-     VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-    [user.email, user.password, user.nombre, user.fecha_nac, user.peso_inicial, user.sexo]
-  );
-  return result.rows[0];
 }
 
 async function findUserByEmail(email) {

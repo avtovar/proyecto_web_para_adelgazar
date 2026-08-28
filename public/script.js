@@ -51,7 +51,14 @@ async function api(url, options = {}) {
     headers: { ...headers, ...(options.headers || {}) }
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || 'No se pudo completar la operacion');
+  if (!res.ok) {
+    if (res.status === 401 && !url.includes('/login') && !url.includes('/registro')) {
+      localStorage.removeItem('token');
+      authScreen.hidden = false;
+      mainPanel.hidden = true;
+    }
+    throw new Error(data.error || 'No se pudo completar la operacion');
+  }
   return data;
 }
 
@@ -340,9 +347,14 @@ document.getElementById('guardarTiempo').addEventListener('click', async () => {
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   showNotification('', 'error');
-  await api('/api/logout', { method: 'POST' });
-  localStorage.removeItem('token');
-  location.reload();
+  try {
+    await api('/api/logout', { method: 'POST' });
+  } catch {
+    /* sin red u otro error: continuar con logout local */
+  } finally {
+    localStorage.removeItem('token');
+    location.reload();
+  }
 });
 
 const editModal = document.getElementById('editProfileModal');
