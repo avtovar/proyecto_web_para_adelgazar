@@ -1,0 +1,16 @@
+{
+  "appId": "com.metodo.adelgazar",
+  "appName": "MetodoParaAdelgazar",
+  "webDir": "public",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": [
+      "https://*.vercel.app"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000
+    }
+  }
+}

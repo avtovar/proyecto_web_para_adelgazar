@@ -8,6 +8,7 @@ const crypto = require('crypto');
 const db = require('./db');
 
 const app = express();
+const path = require('path');
 
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -20,12 +21,32 @@ const COOKIE_OPTS = {
   maxAge: 86400 * 1000
 };
 
+const CORS_ORIGINS = [
+  'http://localhost:3000',
+  'http://localhost',
+  'capacitor://localhost',
+  'ionic://localhost',
+  ...(process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [])
+];
+
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
 app.use(compression());
 app.use(helmet({ contentSecurityPolicy: false }));
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && CORS_ORIGINS.some(o => origin.startsWith(o) || origin === o)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -65,8 +86,18 @@ function calcularEdad(fecha) {
   return edad;
 }
 
+function extractToken(req) {
+  const fromCookie = req.cookies?.token;
+  if (fromCookie) return fromCookie;
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    return authHeader.slice(7);
+  }
+  return null;
+}
+
 function requireAuth(req, res, next) {
-  const token = req.cookies?.token;
+  const token = extractToken(req);
   if (!token) return res.status(401).json({ error: 'No autenticado' });
   try {
     req.user = jwt.verify(token, JWT_SECRET);
@@ -126,6 +157,7 @@ app.post('/api/login', asyncHandler(async (req, res) => {
   res.cookie('token', token, COOKIE_OPTS);
   return res.json({
     success: true,
+    token,
     user: { id: user.id, nombre: user.nombre, sexo: user.sexo, peso_inicial: Number(user.peso_inicial) }
   });
 }));
@@ -136,7 +168,7 @@ app.post('/api/logout', (req, res) => {
 });
 
 app.get('/api/verificar', asyncHandler(async (req, res) => {
-  const token = req.cookies?.token;
+  const token = extractToken(req);
   if (!token) return res.json({ loggedIn: false });
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -217,6 +249,12 @@ app.get('/api/sesiones/total', requireAuth, asyncHandler(async (req, res) => {
   const total = await db.getTotalMinutes(req.user.id);
   return res.json({ total_minutos: total });
 }));
+
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+  }
+});
 
 app.use((err, req, res, next) => {
   console.error('Error:', err);

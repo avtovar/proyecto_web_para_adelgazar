@@ -1,3 +1,5 @@
+const API_BASE_URL = 'https://metodoparaadelgazar.vercel.app';
+
 let currentUser = null;
 let ejerciciosData = {};
 let ultimoPeso = null;
@@ -41,9 +43,12 @@ function setLoading(buttonId, loading) {
 }
 
 async function api(url, options = {}) {
-  const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    ...options
+  const headers = { 'Content-Type': 'application/json' };
+  const token = localStorage.getItem('token');
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const res = await fetch(API_BASE_URL + url, {
+    ...options,
+    headers: { ...headers, ...(options.headers || {}) }
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || 'No se pudo completar la operacion');
@@ -257,6 +262,7 @@ loginForm.addEventListener('submit', async (e) => {
         password: document.getElementById('loginPassword').value
       })
     });
+    localStorage.setItem('token', data.token);
     await mostrarPanel(data.user);
   } catch (error) {
     setMessage('loginError', error.message, 'error');
@@ -335,6 +341,7 @@ document.getElementById('guardarTiempo').addEventListener('click', async () => {
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   showNotification('', 'error');
   await api('/api/logout', { method: 'POST' });
+  localStorage.removeItem('token');
   location.reload();
 });
 

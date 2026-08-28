@@ -3,3 +3,9 @@ data/
 *.log
 .env
 test_reg.json
+
+.vercel
+
+# IDE - Android Studio / IntelliJ
+.idea/
+**/.idea/

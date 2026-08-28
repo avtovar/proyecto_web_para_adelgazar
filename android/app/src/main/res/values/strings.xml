@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MetodoParaAdelgazar</string>
+    <string name="title_activity_main">MetodoParaAdelgazar</string>
+    <string name="package_name">com.metodo.adelgazar</string>
+    <string name="custom_url_scheme">com.metodo.adelgazar</string>
+</resources>
